@@ -63,9 +63,8 @@ jobs:
         docker build -t ${{ secrets.DOCKER_USERNAME }}/quarkus-demo:latest .
         docker push ${{ secrets.DOCKER_USERNAME }}/quarkus-demo:latest
 
-    - name: Deploy to MicroK8s
-      if: success()
+    - name: Desplegar a MicroK8s
       run: |
-        sudo microk8s.kubectl apply -f k8s/deployment.yaml
-        sudo microk8s.kubectl apply -f k8s/service.yaml
+        kubectl apply -f k8s/deployment.yaml
+        kubectl apply -f k8s/service.yaml
 
