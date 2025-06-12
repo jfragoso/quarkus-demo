@@ -63,27 +63,19 @@ jobs:
         docker build -t ${{ secrets.DOCKER_USERNAME }}/quarkus-demo:latest .
         docker push ${{ secrets.DOCKER_USERNAME }}/quarkus-demo:latest
 
-    - name: 📥 Clonar repositorio
-      uses: actions/checkout@v4
+  deploy:
+    needs: build
+    runs-on: [self-hosted, linux, x64]  # Usa etiquetas según tu runner
+    steps:
+    - uses: actions/checkout@v3
 
-    - name: 🔧 Exportar /snap/bin al PATH
-      run: |
-        echo "/snap/bin" >> $GITHUB_PATH
-        export PATH=$PATH:/snap/bin
-
-    - name: 🟢 Verificar que MicroK8s está listo
+    - name: Asegurar que MicroK8s esté listo
       run: |
         sudo microk8s status --wait-ready
 
-    - name: 🚢 Aplicar manifiesto Deployment
+    - name: Aplicar manifiestos Kubernetes
       run: |
         sudo microk8s kubectl apply --validate=false -f k8s/deployment.yaml
-
-    - name: 🚢 Aplicar manifiesto Service
-      run: |
         sudo microk8s kubectl apply --validate=false -f k8s/service.yaml
-
-    - name: ✅ Verificar recursos desplegados
-      run: |
         sudo microk8s kubectl get all -n default
 
