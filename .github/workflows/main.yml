@@ -63,6 +63,14 @@ jobs:
         docker build -t ${{ secrets.DOCKER_USERNAME }}/quarkus-demo:latest .
         docker push ${{ secrets.DOCKER_USERNAME }}/quarkus-demo:latest
 
+    - name: Verificar que MicroK8s esté listo
+      run: sudo microk8s status --wait-ready
+
+    - name: Configurar kubectl para usar MicroK8s
+      run: |
+        mkdir -p ~/.kube
+        sudo microk8s config > ~/.kube/config
+
     - name: Desplegar a MicroK8s
       run: |
         sudo kubectl apply --validate=false -f k8s/deployment.yaml
