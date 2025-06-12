@@ -14,6 +14,6 @@ spec:
     spec:
       containers:
         - name: quarkus
-          image: docker.io/tu_usuario/quarkus-demo:latest
+          image: docker.io/jorgevalentefragoso/quarkus-demo:latest
           ports:
             - containerPort: 8080
